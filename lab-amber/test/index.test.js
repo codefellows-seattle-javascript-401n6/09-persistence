@@ -15,7 +15,7 @@ describe('Server tests', () => {
   });
 
   test('throws 404 if invalid ids are entered', (done) => {
-    request.get(SERVER_URL + '/api/projects' + '1234')
+    request.get(SERVER_URL + '/api/projects/' + '1234')
     .end((err, res) => {
       expect(res.status).toBe(404);
       done();

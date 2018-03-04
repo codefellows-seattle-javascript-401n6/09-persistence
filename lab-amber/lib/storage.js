@@ -3,11 +3,13 @@
 const Project = require('../model/project.js');
 const fs = require('fs');
 
-let PROJECTS = {};
+let STORAGE_DIRECTORY = __dirname + '/project-files/';
+
+function idFileName(id) {
+  return `${STORAGE_DIRECTORY}${id}.json`;
+}
 
 function seed() {
-  PROJECTS = {};
-
   save(new Project('Node Ecosystem', 'The Arithmetic.add method expects two integers as parameters and returns either null if the entered arguments are invalid or an integer as the sum of both numbers.', 'https://github.com/amgranad/01-node-ecosystem/tree/master/lab-amber'));
 
   save(new Project('Tools and Context', 'Jest Testing and Map, Reduce, Filter, ForEach in vanilla JavaScript practice', 'https://github.com/amgranad/02-tools-and-context/tree/master/lab-amber'));
@@ -20,11 +22,23 @@ function seed() {
 }
 
 function save(project) {
-  PROJECTS[project.id] = project;
+  return new Promise((resolve, reject) => {
+    let filename = idFileName(project.id);
+    let data = JSON.stringify(project);
+    fs.writeFile(filename, data, (err) => {
+      resolve(project);
+    });
+  });
 }
 
 function get(id) {
-  return PROJECTS[id];
+  return new Promise((resolve, reject) => {
+    let filename = idFileName(id);
+    fs.readFile(filename, (err, data) => {
+      let project = JSON.parse(data);
+      resolve(project);
+    });
+  });
 }
 
 function size() {
@@ -33,21 +47,37 @@ function size() {
 }
 
 function getAll() {
-  return Object.values(PROJECTS);
+  return new Promise((resolve, reject) => {
+    fs.readdir(STORAGE_DIRECTORY, (err, files) => {
+      resolve(files);
+    });
+  });
 }
 
 function update(id, name, description, url) {
-  let project = get(id);
-  project.name = name;
-  project.description = description;
-  project.url = url;
-  return project;
+  return new Promise((resolve, reject) => {
+    get(id).then(
+      project => {
+        let filename = idFileName(id);
+        let data = JSON.stringify(project);
+        fs.writeFile(filename, data, (err) => {
+          resolve(project);
+        });
+      }
+    );
+  });
 }
 
 function remove(id) {
-  let project = get(id);
-  delete PROJECTS[id];
-  return true;
+  return new Promise((resolve, reject) => {
+    get(id)
+    .then(project => {
+      let filename = idFileName(id);
+      fs.unlink(filename, (err) => {
+        resolve(project);
+      });
+    });
+  });
 }
 
 module.exports = {

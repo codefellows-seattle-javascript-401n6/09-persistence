@@ -25,16 +25,23 @@ function getProjects(req, res) {
       responses.text400(req, res, message);
     } else if (req.url.query.id) {
       let id = req.url.query.id;
-      let project = storage.get(id);
-      if (project === undefined) {
-        let message = `Project at ${id} Not Found`;
-        responses.text404(req, res, message);
-      } else {
-        responses.json200(req, res, JSON.stringify(project));
-      }
+      let project;
+      storage.get(id).then(
+        (json) => {
+          project = json;
+          if (project === undefined) {
+            let message = `Project at ${id} Not Found`;
+            responses.text404(req, res, message);
+          } else {
+            responses.json200(req, res, JSON.stringify(project));
+          }
+        }
+      );
     } else {
-      let projects = storage.getAll();
-      responses.json200(req, res, JSON.stringify(projects));
+      let projects = storage.getAll()
+      .then(files => {
+        responses.json200(req, res, JSON.stringify(files));
+      });
     }
   } else {
     let message = 'error. invalid request\ntry localhost:3000/api/projects with a proper text query';
@@ -73,8 +80,11 @@ function updateProject(req, res) {
         if (body.id !== undefined) {
 
           let id = body.id;
-          let project = storage.update(id, name, description, url);
-          responses.text200(req, res, `project update successful at id ${project.id}`);
+          let project = storage.update(id, name, description, url).then(
+            project => {
+              responses.text200(req, res, `project update successful at id ${project.id}`);
+            }
+          );
         }
       } catch (err) {
         let json = JSON.stringify({
@@ -96,10 +106,12 @@ function removeProject(req, res) {
     });
     if (req.url.query.id) {
       let id = req.url.query.id;
-      let removed = storage.remove(id);
-      if (removed) {
-        responses.text204(req, res, `Successfully removed at: ${id}`);
-      }
+      let removed = storage.remove(id)
+      .then(
+        (json) => {
+          console.log('removeproject json', json);
+          responses.text204(req, res, `Successfully removed at: ${id}`);
+      });
     } else {
       let projects = storage.getAll();
       responses.json200(req, res, JSON.stringify(projects));
