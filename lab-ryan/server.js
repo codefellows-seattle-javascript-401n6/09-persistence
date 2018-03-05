@@ -5,7 +5,7 @@ const url = require('url');
 const querystring = require('querystring');
 
 const Tool = require('./model/tools.js');
-const tools = [new Tool('DeWalt', 'hammer', 'construction')];
+const tools = [new Tool('Craftsman', 'hammer', 'construction')];
 
 const server = http.createServer((req, res) => {
     console.log('URL', req.url);
