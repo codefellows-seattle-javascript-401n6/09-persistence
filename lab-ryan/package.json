@@ -18,6 +18,7 @@
   "homepage": "https://github.com/rjtj2007/09-persistence#readme",
   "dependencies": {
     "jest": "^22.4.2",
+    "nodemon": "^1.17.1",
     "uuidv4": "^1.0.0"
   }
 }
