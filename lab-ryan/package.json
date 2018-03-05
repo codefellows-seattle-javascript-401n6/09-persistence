@@ -1,0 +1,23 @@
+{
+  "name": "09-persistence",
+  "version": "1.0.0",
+  "description": "![cf](https://i.imgur.com/7v5ASc8.png) Lab 09: Vanilla REST API w/ Persistence ======",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rjtj2007/09-persistence.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rjtj2007/09-persistence/issues"
+  },
+  "homepage": "https://github.com/rjtj2007/09-persistence#readme",
+  "dependencies": {
+    "jest": "^22.4.2",
+    "uuidv4": "^1.0.0"
+  }
+}
