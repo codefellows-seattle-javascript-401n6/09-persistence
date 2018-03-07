@@ -1,7 +1,7 @@
-# Amber Kim CodeFellows Lab 08 Vanilla REST Server
+# Amber Kim CodeFellows Lab 09 Persistence with File System
 
 ## Introduction
-This is a simple node.js app with an Http Server that implements Restful API's. It is built using Vanilla JavaScript and practices separation of concerns.
+This is a simple node.js app with an Http Server that implements Restful API's. It is built using Vanilla JavaScript and practices separation of concerns. Some peristence is created using NPM File Server.
 
 ## To Run This Application
 Run server.js. Some example tools and commands you can use:
