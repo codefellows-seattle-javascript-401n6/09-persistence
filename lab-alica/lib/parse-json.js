@@ -1,37 +1,31 @@
 'use strict';
 
-const url = require('url');
-const querystring = require('querystring');
+const parseUrl = require('url').parse;
+const parseQuery = require('querystring').parse;
 
-module.exports = function(req) {
-  req.url = url.parse(req.url);
-  req.url.query = querystring.parse(req.url.query);
+function parseJSON (req) {
+  let promise = new Promise((resolve, reject) => {
+    req.url = parseUrl(req.url);
+    req.url.query = parseQuery(req.url.query);
 
-  return new Promise((resolve, reject) => {
-      if (req.method === 'POST' || req.method === 'PUT') {
-        let body = '';
-  
-        req.body.on('data', (data) => {
-          body += data.toString();
-        });
-  
-        req.body.on('end', () => {
-          req.body = body;
-          try {
-            req.body = JSON.parse(body);
-            resolve(req);
-          } catch (err) {
-            console.error(err);
-            reject(err);
-          };
-        });
-  
-        req.body.on('error', (err) => {
-          console.error(err);
-          reject(err);
-        });
+      if (req.method !== 'PUT' && req.method !== 'POST') {
+        resolve();
         return;
       }
-      resolve();
-    });
+
+        let body = "";
+        req.on('data', (data) => {
+          body += data.toString();
+        });
+        req.on('end', () => {
+          req.body = body;
+          resolve();
+        });
+        req.on('error', (err) => {
+          reject(err);
+        });
+      });
+      return promise;
   };
+
+  module.exports = parseJSON;
