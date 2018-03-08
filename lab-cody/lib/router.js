@@ -1,7 +1,8 @@
 'use strict';
-const parseUrl = require('url').parse;
-const parseQuery = require('querystring').parse;
-const storage = require('./storage.js');
+const url = require('url');
+const queryString = require('querystring');
+
+const parseUrl = require('./urlParser');
 
 class Router {
   constructor() {
@@ -32,42 +33,31 @@ class Router {
 
   route(req, res) {
     const method = req.method;
-
-    if (method === "PUT" || method === "POST") {
+    parseUrl(req).then(url => {
+      let thisRoute = this.routes[method][url.pathname];
+      if(!thisRoute) {
+        let warning = 'no no no try localhost:3000//api/doge';
+        res.writeHead(404, {'Content-Type': 'text/plain'});
+        res.write(warning);
+        res.end;
+      }
+      thisRoute(req, res);
+    }).catch(err => console.error(err));
     }
-
-
-    req.url = parseUrl(req.url);
-    req.url.query = parseQuery(req.url.query);
-    console.log('URL:', req.url.href);
-    console.log('QUERY:', req.url.query);
-    
-    
-    
-    
-    let path = req.url.pathname;
-    const route = this.routes[method][path];
-    
-    if (!route) {
-    throw `404 Not Found: ${method} ${path} ${storage.getAll()}`; 
-    //   throw `404 Not Found: ${method}`; 
-
-    }
-    route(req, res);
-  }
+  
 
   tryRoute(req, res) {
     try {
       return this.route(req, res);
     } catch (error) {
       console.log('ERROR:', error)
-      // assume the worst as 500
+      
       let code = 500;
       if (error && error.substr) {
         let status = error.substr(0,3)
         code = parseInt(status, 10);
         if (isNaN(code) || code < 300 || code >= 499) {
-          // internal server error
+         
           code = 500;
         }
       }

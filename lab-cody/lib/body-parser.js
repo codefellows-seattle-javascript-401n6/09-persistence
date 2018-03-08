@@ -3,20 +3,21 @@ const http = require('http');
 const url = require('url');
 const parseQuery = require('querystring');
 
-function bodyParser() {
+function bodyParser(req) {
+  return new Promise((resolve, reject) => {
     let body = '';
-    req.body.on("data", (data) => {
+    req.on("data", (data) => {
       body += data.toString();
     });
   
-    req.body.on("end", () => {
-      body += data.toString();
-      req.body = body;
+    req.on("end", () => {
+     resolve(body);
     });
   
-    req.body.on("error", (error) => {
-      throw error
+    req.on("error", (error) => {
+      reject (error);
     });
+  });
   }
 
   module.exports = bodyParser;
