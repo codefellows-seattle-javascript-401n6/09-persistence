@@ -1,40 +1,43 @@
 'use strict';
 
-module.exports = exports = {};
+const url = require('url');
 
-exports.sendText200 = (res, status, msg) => {
+const responses = {};
+
+responses.sendText200 = (req, res, msg) => {
   res.writeHead(200, { 'Content-Type': 'text/plain' });
   res.write(msg);
   res.end();
 }
 
-exports.sendText204 = (res, status, msg) => {
+responses.sendText204 = (req, res, msg) => {
   res.writeHead(204, { 'Content-Type': 'text/plain' });
   res.write(msg);
   res.end();
 }
 
-exports.sendText400 = (res, status, msg) => {
+responses.sendText400 = (req, res, msg) => {
   res.writeHead(400, { 'Content-Type': 'text/plain' });
   res.write(msg);
   res.end();
 }
 
-exports.sendText404 = (res, status, msg) => {
+responses.sendText404 = (req, res, msg) => {
   res.writeHead(400, { 'Content-Type': 'text/plain' });
   res.write(msg);
   res.end();
 }
 
-exports.sendJSON200 = (res, status, data) => {
-  console.log('in the json 200', json);
+responses.sendJSON200 = (req, res, data) => {
   res.writeHead(200, { 'Content-Type': 'application/json' });
   res.write(data);
   res.end();
 }
 
-exports.sendJSON400 = (res, status, data) => {
+responses.sendJSON400 = (req, res, data) => {
   res.writeHead(400, { 'Content-Type': 'application/json' });
   res.write(JSON.stringify(data));
   res.end();
 };
+
+module.exports = responses;
