@@ -26,7 +26,8 @@ describe('Paddle Routes', function () {
             request.post('localhost:3000/api/paddle')
                 .send({
                     name: 'test name',
-                    paddle: 'test paddle'
+                    bladeSurfaceArea: 'test paddle',
+                    length: 'test length'
                 })
                 .end((err, res) => {
                     if (err) return done(err);

@@ -1,20 +1,25 @@
 'use strict';
 
 const Paddle = require('../model/paddle.js')
+const fs = require('fs')
+
+let S
 
 let PADDLES = {};
 
 function seed() {
     PADDLES = {};
-
+    
+    const test = new Paddle("test", 10, 100);
+    test.id = 'paddletest';
     const shogun = new Paddle("Sho-Gun", 711, 197);
     const stikine = new Paddle("Stikine", 656, 194);
     const powerhouse = new Paddle("Powerhouse", 720, 200);
 
+    PADDLES[test.id] = test;
     PADDLES[shogun.id] = shogun;
     PADDLES[stikine.id] = stikine;
     PADDLES[powerhouse.id] = powerhouse;
-    console.log("PADDLES:", PADDLES);
 }
 
 function size() {
@@ -42,7 +47,7 @@ function read(id) {
     return PADDLES[id];
 }
 
-function update(id, bladeSurfaceArea, length) {
+function update(id, name, bladeSurfaceArea, length) {
     let paddle = read(id);
     paddle.name = name;
     paddle.bladeSurfaceArea = bladeSurfaceArea;
@@ -50,12 +55,12 @@ function update(id, bladeSurfaceArea, length) {
     return paddle;
 }
 
-function del(id) {
+function remove(id) {
     let paddle = read(id);
     delete PADDLES[id];
     return paddle;
 }
 
 module.exports = {
-    seed, size, create, readAll, read, update, del,
+    seed, size, create, readAll, read, update, remove,
 };
