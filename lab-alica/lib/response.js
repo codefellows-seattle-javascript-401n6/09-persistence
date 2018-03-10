@@ -26,7 +26,6 @@ exports.sendText404 = (res, status, msg) => {
   res.end();
 }
 
-
 exports.sendJSON200 = (res, status, data) => {
   console.log('in the json 200', json);
   res.writeHead(200, { 'Content-Type': 'application/json' });

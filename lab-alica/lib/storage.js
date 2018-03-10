@@ -1,9 +1,7 @@
 'use strict';
 
 const Paddle = require('../model/paddle.js')
-const fs = require('fs')
-
-let S
+const fs = require('fs');
 
 let PADDLES = {};
 

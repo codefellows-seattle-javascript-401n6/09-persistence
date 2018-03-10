@@ -4,7 +4,7 @@ const request = require('superagent');
 const expect = require('chai').expect;
 const server = require('../server.js');
 
-describe('Paddle Routes', function () {
+describe('Server tests', function () {
     let paddle = null;
 
     describe('GET: /api/paddle', function () {

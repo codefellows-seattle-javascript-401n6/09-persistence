@@ -1,102 +1,76 @@
 'use strict';
 
+const parseQuery = require('querystring').parse;
 const parseUrl = require('./parse-url.js');
 const parseJSON = require('./parse-json.js');
 
 class Router {
-  constructor() {
-    this.routes = {
-      GET: {},
-      PUT: {},
-      POST: {},
-      DELETE: {}
+     constructor() {
+        this.routes = {
+            GET: {}, 
+            POST: {},
+            PUT: {},
+            DELETE: {}
+        }
+    }
+
+    get(path, cb) {
+        this.routes.GET[path] = cb;
+    } 
+
+    post(path, cb) {
+        this.routes.POST[path] = cb;
+    }
+
+    put(path, cb) {
+        this.routes.PUT[path] = cb;
+    }
+
+    remove(path, cb) {
+        this.routes.DELETE[path] = cb;
+    }
+
+  route(req, res) {
+    const method = req.method;
+
+    req.url = parseUrl(req);
+    req.url.query = parseQuery(req.url.query);
+
+    parseJSON(req)
+      .then(() => {
+        let path = req.url.pathname;
+        let currentRoute = this.routes[method][path]
+
+        if (!currentRoute) {
+          throw '404 not found';
+        }
+        if (currentRoute) {
+          currentRoute(req, res);
+        }
+      })
+  }
+
+  tryRoute(req, res) {
+    try {
+      return this.route(req, res);
+    } catch (error) {
+      console.error('ERROR:', error);
+      let code = 500;
+      if (error && error.substr) {
+        let status = error.substr(0, 3);
+        code = parseInt(status, 10);
+        if (isNaN(code) || code < 300 || code >= 499) {
+          code = 500;
+        }
+      }
+      res.writeHead(code, {
+        'Content-Type': 'text/plain'
+      });
+      res.write(error);
+      res.end();
+      return;
     }
   }
+};
 
-  get(path, cb) {
-    this.routes.GET[path] = cb;
-  }
-
-  put(path, cb) {
-    this.routes.PUT[path] = cb;
-  }
-
-  post(path, cb) {
-    this.routes.POST[path] = cb;
-  }
-
-  del(path, cb) {
-    this.routes.DELETE[path] = cb;
-  }
-
-  route = () => {
-    return (req, res) => {
-      Promise.all([
-          parseUrl(req),
-          parseJSON(req)
-        ])
-        .then(() => {
-          if (typeof this.routes[req.method][req.url.pathname] === 'function') {
-            this.routes[req.method][req.url.pathname](req, res);
-            return;
-          }
-
-          console.error('route not found');
-
-          res.writeHead(404, {
-            'Content-Type': 'text/plain'
-          });
-
-          res.write('route not found');
-          res.end();
-        })
-        .catch(err => {
-          console.error(err);
-
-          res.writeHead(400, {
-            'Content-Type': 'text/plain'
-          });
-
-          res.write('bad request');
-          res.end();
-        });
-    };
-  };
-    //   sendError(req, res, error) {
-    //     if (error.status && error.message) {
-    //       res.writeHead(error.status);
-    //       res.write(error.message);
-    //     } else {
-    //       res.writeHead(500);
-    //       res.write("Internal Server Error: " + error);
-    //     }
-    //     res.end();
-    //   }
-
-    //   route(req, res) {
-    //     parseJSON(req)
-    //       .then(() => {
-    //         let method = req.method;
-    //         let path = req.url.pathname;
-    //         const route = this.routes[method][path];
-    //         if (!route) {
-    //           throw {
-    //             status: 404,
-    //             message: `URL not found: ${method} ${path}`
-    //           };
-    //         }
-    //         route(req, res);
-    //       })
-    //       .catch(error => {
-    //         sendError(req, res, error);
-    //       });
-    //   }
-  };
-
-  module.exports = {
-    get,
-    put,
-    post,
-    del,
-    route
-  };
+module.exports = Router;
