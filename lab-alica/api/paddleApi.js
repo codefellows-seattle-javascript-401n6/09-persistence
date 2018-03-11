@@ -12,12 +12,9 @@ storage.seed();
 
 // GET -> get all the paddles
 function getAllPaddles(req, res) {
-
-    const PADDLES = storage.readAll();
-    // res.writeHead(200, {'Content-Type': 'application/json'});
-    res.write(JSON.stringify(PADDLES));
-    res.end();
-
+    storage.readAll().then(files => {
+        responses.sendJSON200(req, res, (JSON.stringify(files)));
+    })
     if ('id' in req.url.query) {
         let id = req.url.query.id;
         if (id.length === 0) {
@@ -38,7 +35,7 @@ function getPaddles(req, res) {
     }
     if (req.url.query.id === '') {
         let msg = (`Please provide a vaild ${id}`);
-        response.sendText404(req, res, msg);
+        response.sendText400(req, res, msg);
     }
     if (req.url.query.id) {
         let id = req.url.query.id;
@@ -52,7 +49,6 @@ function getPaddles(req, res) {
     } else {
         let paddles = storage.readAll();
         responses.sendJSON200(req, res, (JSON.stringify(paddles)));
-
     }
 };
 
@@ -91,7 +87,7 @@ function updatePaddles(req, res) {
                 let id = req.url.query.id;
                 let paddle = storage.update(id, name, bladeSurfaceArea, length);
                 paddle => {
-                responses.sendJSON200(req, res, `paddle update successful at id: ${paddle.id}`);
+                    responses.sendJSON200(req, res, `paddle update successful at id: ${paddle.id}`);
                 }
             }
         })
@@ -107,14 +103,14 @@ function removePaddles(req, res) {
 
     if (req.url.query.id) {
         let paddle = storage.remove(req.url.query.id)
-            let id = req.url.query.id;
-            responses.sendJSON200(req, res, 'Paddle was successfuly removed!');
-        } else {
-            let msg = ('Error. Query was not provided.');
-            responses.sendText204(req, res, msg);
-            return;
-        }
-    };
+        let id = req.url.query.id;
+        responses.sendJSON200(req, res, 'Paddle was successfuly removed!');
+    } else {
+        let msg = ('Error. Query was not provided.');
+        responses.sendText204(req, res, msg);
+        return;
+    }
+};
 
 module.exports = {
     getAllPaddles,

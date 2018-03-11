@@ -2,23 +2,30 @@
 
 const Paddle = require('../model/paddle.js')
 const fs = require('fs');
+const parseJSON = require('../lib/parse-json.js');
 
-let PADDLES = {};
+let STORAGE_DIR = __dirname + '/paddlefiles';
+
+let idFilename = (id) => {
+    return `${STORAGE_DIR}/${id}.json`;
+};
 
 function seed() {
-    PADDLES = {};
-    
-    const test = new Paddle("test", 10, 100);
-    test.id = 'paddletest';
-    const shogun = new Paddle("Sho-Gun", 711, 197);
-    const stikine = new Paddle("Stikine", 656, 194);
-    const powerhouse = new Paddle("Powerhouse", 720, 200);
-
-    PADDLES[test.id] = test;
-    PADDLES[shogun.id] = shogun;
-    PADDLES[stikine.id] = stikine;
-    PADDLES[powerhouse.id] = powerhouse;
+    save(new Paddle("test", 10, 100));
+    save(new Paddle("Sho-Gun", 711, 197));
+    save(new Paddle("Stikine", 656, 194));
+    save(new Paddle("Powerhouse", 720, 200));
 }
+
+function save(paddle) {
+    return new Promise((resolve, rej) => {
+        let filename = idFilename(paddle.id);
+        let data = JSON.stringify(paddle);
+        fs.writeFile(filename, data, (err) => {
+            resolve(paddle);
+        })
+    })
+};
 
 function size() {
     let paddles = readAll();
@@ -35,30 +42,55 @@ function create(name, bladeSurfaceArea, length) {
 }
 
 function readAll() {
-    return Object.values(PADDLES);
-}
+    return new Promise((resolve, rej) => {
+        fs.readdir(STORAGE_DIR, (err, files) => {
+            resolve(files);
+        })
+    })
+};
 
 function read(id) {
-    if (!id in PADDLES) {
-        throw "Paddle doesn't exist. ID: " + id;
-    }
-    return PADDLES[id];
-}
+    return new Promise((resolve, rej) => {
+        let filename = idFilename(id);
+        fs.readFile(filename, (err, data) => {
+            let paddle = parseJSON(data);
+            resolve(paddle);
+        })
+    })
+};
 
 function update(id, name, bladeSurfaceArea, length) {
-    let paddle = read(id);
-    paddle.name = name;
-    paddle.bladeSurfaceArea = bladeSurfaceArea;
-    paddle.length = length;
-    return paddle;
-}
+    return new Promise((resolve, rej) => {
+        get(id).then(
+            req => {
+                let filename = idFilename(id);
+                let data = JSON.stringify(paddles);
+                fs.writeFile(filename, data, (err) => {
+                    resolve(paddles);
+                })
+            }
+        )
+    })
+};
 
 function remove(id) {
-    let paddle = read(id);
-    delete PADDLES[id];
-    return paddle;
-}
+    return new Promise((resolve, rej) => {
+        get(id)
+            .then(paddle => {
+                let filename = idFilename(id);
+                fs.unlink(filename, (err) => {
+                    resolve(paddle);
+                })
+            })
+    })
+};
 
 module.exports = {
-    seed, size, create, readAll, read, update, remove,
+    seed,
+    size,
+    create,
+    readAll,
+    read,
+    update,
+    remove,
 };

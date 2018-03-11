@@ -3,6 +3,7 @@
 const parseQuery = require('querystring').parse;
 const parseUrl = require('./parse-url.js');
 const parseJSON = require('./parse-json.js');
+const responses = require('../lib/response.js');
 
 class Router {
      constructor() {
@@ -42,7 +43,8 @@ class Router {
         let currentRoute = this.routes[method][path]
 
         if (!currentRoute) {
-          throw '404 not found';
+          let msg = ('Error. Invalid entry.');
+          responses.sendText404(req, res, msg);
         }
         if (currentRoute) {
           currentRoute(req, res);
