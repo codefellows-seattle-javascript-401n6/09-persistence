@@ -1,23 +1,21 @@
 'use strict';
 
-const url = require('url');
-const querystring = require('querystring');
+const parseUrl = require('url').parse;
+const parseQuery = require('querystring').parse;
 
 module.exports = function(req) {
-  req.url = url.parse(req.url);
-  req.url.query = querystring.parse(req.url.query);
-
   return new Promise((resolve, reject) => {
       if (req.method === 'POST' || req.method === 'PUT') {
         let body = '';
   
-        req.body.on('data', (data) => {
+        req.on('data', (data) => {
           body += data.toString();
         });
   
-        req.body.on('end', () => {
+        req.on('end', () => {
           req.body = body;
           try {
+            console.log("JSON END", body)
             req.body = JSON.parse(body);
             resolve(req);
           } catch (err) {
@@ -26,7 +24,7 @@ module.exports = function(req) {
           };
         });
   
-        req.body.on('error', (err) => {
+        req.on('error', (err) => {
           console.error(err);
           reject(err);
         });
