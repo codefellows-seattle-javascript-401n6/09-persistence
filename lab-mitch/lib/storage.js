@@ -1,33 +1,88 @@
 'use strict';
 
+const fs = require('fs');
+const parseJSON = require('../lib/parse-json.js')
+
 const Car = require("../models/car.js");
 
-let CARS = {};
+let STORAGE_DIR = __dirname + '/carfiles';
+
+let idFilename = (id) => {
+    return `${STORAGE_DIR}/${id}.JSON`
+}
+
+
 
 function seed() {
-    CARS = {};
-    save(new Car("Ford", "Mustang GT", "2006", "Grey"));
-    save(new Car("Ford", "Mustang", "1994", "Teal"));
-    save(new Car("Saturn", "Unknown Coup", "Unknown year", "Silver"));
-    save(new Car("Ford", "Ranger", "1997", "Red"));
+    save(new Car("Alice", "Ford", "Mustang GT", "2006", "Grey"));
+    save(new Car("Leena", "Ford", "Mustang LX", "1994", "Teal"));
+    save(new Car("Unnamed", "Saturn", "Unknown Coup", "Unknown year", "Silver"));
+    save(new Car("Camile", "Ford", "Ranger XL", "1997", "Red"));
 }
 
 function save(car) {
-    CARS[car.id] = car;
+    return new Promise((resolve, reject) => {
+        let filename = idFilename(car.id);
+        let data = JSON.stringify(car);
+        fs.writeFile(filename, data, (err) => {
+            resolve(car);
+        })
+    })
+
+}
+
+function size() {
+    let cars = readAll();
+    return cars.length;
+}
+
+function create(name, make, model, year, color) {
+
 }
 
 function get(id) {
-    return CARS[id];
+    return new Promise((resolve, reject) => {
+        let filename = idFilename(car.id);
+        fs.readFile(filename, (err, data) => {
+            let retrievedCar = JSON.parse(data);
+            resolve(retrievedCar);
+
+        })
+    });
 }
 
-function getAll () {
-    return Object.values(CARS);
+
+
+function getAll() {
+    return new Promise((resolve, reject) => {
+        fs.readdir(STORAGE_DIRECTORY, (err, files) => {
+            resolve(files);
+        });
+    });
+
 }
 
-function remove (id) {
-    let deletedCar = get[id];
-    delete CARS[id]
-    return deletedCar;
+function remove(id) {
+    return new Promise((resolve, reject) => {
+        get(id)
+            .then(car => {
+                let filename = idFilename(car.id);
+                fs.unlink(filename, (err) => {
+                    resolve(car);
+                })
+            })
+    })
 }
 
-module.exports = {seed, save, get, remove, getAll};
+function removeAll() {
+    return getAll()
+        .then(files => {
+            let promises = files.map(file => {
+                let id = file.split(".json")[0];
+                return remove(id);
+            })
+            return Promise.all(promises);
+        });
+}
+
+module.exports = { seed, save, get, getAll, remove, removeAll };
