@@ -62,32 +62,35 @@ const seed = () => {
   // });
 };
 
-const getAll = () => {
+const getAll = (cb) => {
+  let fileDataList = [];
   let filesCounted = 0;
   fs.readdir('./saved-files/', (error, filename) => {
     if (error) {
       throw error;
     };
+
     filename.forEach(file => {
-      read(filename + '.json', (error, allData) => {
+      fs.readFile(`./saved-files/${file}`, (error, data) => {
+        console.log(`Is error null:${error}`);
         if (error) {
-          console.log('ERROR read');
-          console.error(error);
+          cb(error);
         };
-        console.log('all data',allData);
+
+        fileDataList.push(JSON.parse(data.toString()));
+        filesCounted++;
+        console.log(`Number of Files Counted: ${filesCounted}`);
+
+        if (filesCounted === filename.length) {
+          console.log(fileDataList);
+          cb(null, fileDataList);
+        };
+
       });
-      if(filesCounted === filename.length - 1) {console.log(file)};
+
     });
-    console.log(`array of file names: ${filename}`);
-    // console.log(`List of Files: ${fileList}`);
-    console.log('files counted',filesCounted);
   });
-// let data = ;
-  // read(filename, (data) => {
-  //   console.log('Got back:', data);
-  //   console.log('data.name:', data.name);
-  // });
-  // return data;
+
 };
 
 const getDog = (filename, cb) => {

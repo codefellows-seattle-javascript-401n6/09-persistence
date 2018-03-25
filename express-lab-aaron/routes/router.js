@@ -16,13 +16,16 @@ router.get('/dogs', (request, response) => {
     });
   } else {
     //GET ALL DOGS
-  //   storage.getAll((currentPound) => {
-  //   console.log(`curentPound: ${currentPound}`);
-  //   response.send(currentPound);
-  // });
-    let currentPound = storage.getAll();
-    console.log(`curentPound: ${currentPound}`);
-    response.send(currentPound);
+    let currentPound; 
+    storage.getAll((error, fileDataList) => {
+      if (error) {
+        response.send(error);
+      };
+      currentPound = fileDataList;
+      console.log(`curentPound: ${currentPound}`);
+      response.send(currentPound);
+    });
+    
   };
 });
 
