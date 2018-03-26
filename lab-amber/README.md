@@ -6,15 +6,14 @@ This is a simple node.js app with an Http Server that implements Restful API's. 
 ## To Run This Application
 Run server.js. Some example tools and commands you can use:
 ```
-node server.js
+node index.js
 // for node
 
-nodemon server.js
-// if you have nodemon installed globally
-
 npm run start
-// the package.json in this repo is configured to run "nodemon server.js" with this command.
+// the package.json in this repo is configured to run "nod index.js" with this command.
 ```
+
+NOTES: DO NOT use Nodemon to run the index.js file as it will cause an infinite loop.
 
 RECOMMENDED: Test this app by using an http client like Postman.
 
