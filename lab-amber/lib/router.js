@@ -14,7 +14,7 @@ class Router {
       POST: {},
       PUT: {},
       DELETE: {}
-    }
+    };
   }
 
   get(path, callback) {
@@ -40,9 +40,7 @@ class Router {
       if(!currentRoute) {
         let message = 'error. invalid request\ntry localhost:3000/api/projects';
         responses.text404(req, res, message);
-        // res.writeHead(404, { 'Content-Type': 'text/plain' });
-        // res.write(message);
-        // res.end();
+        return;
       }
       currentRoute(req, res);
     }).catch(err => console.error(err));

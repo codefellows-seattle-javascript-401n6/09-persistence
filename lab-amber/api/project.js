@@ -39,9 +39,9 @@ function getProjects(req, res) {
       );
     } else {
       let projects = storage.getAll()
-      .then(files => {
-        responses.json200(req, res, JSON.stringify(files));
-      });
+        .then(files => {
+          responses.json200(req, res, JSON.stringify(files));
+        });
     }
   } else {
     let message = 'error. invalid request\ntry localhost:3000/api/projects with a proper text query';
@@ -56,9 +56,9 @@ function createProject(req, res) {
         body = JSON.parse(body);
         let project = new Project(body.name, body.description, body.link);
         let projectID = project.id;
-        storage.save(project);
-        let savedProject = storage.get(projectID);
-        responses.json200(req, res, JSON.stringify(savedProject));
+        storage.save(project).then(savedProject => {
+          responses.json200(req, res, JSON.stringify(savedProject));
+        });
       } catch (err) {
         let message = JSON.stringify({
           error: err,
@@ -107,11 +107,10 @@ function removeProject(req, res) {
     if (req.url.query.id) {
       let id = req.url.query.id;
       let removed = storage.remove(id)
-      .then(
+        .then(
         (json) => {
-          console.log('removeproject json', json);
           responses.text204(req, res, `Successfully removed at: ${id}`);
-      });
+        });
     } else {
       let projects = storage.getAll();
       responses.json200(req, res, JSON.stringify(projects));
