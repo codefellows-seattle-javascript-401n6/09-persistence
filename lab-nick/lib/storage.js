@@ -1,20 +1,30 @@
 'use strict';
 
 const Computer = require('../model/computer.js');
+const fs = require('fs');
 
 let computers = {};
 
 function prePopulate() {
     // console.log('pre populate hit');
     computers = {};
+    // console.log('stor status: ', computers);
+    let filename = `${__dirname}/stor.json`;
+    fs.readFile(filename, (err, data) => {
+        if (err) {
+          throw err;
+        }
+        computers = JSON.parse(data);
+        // console.log('stor status: ', computers);
+      });
                                 //CUP, RAM, HDD
-    const server1 = new Computer('x1 Intel Xeon E5-2690', '32GB', '512GB SSD');
-    const server2 = new Computer('x2 Intel Xeon E5-2690', '64GB', '250GB M.2');
-    const server3 = new Computer('x2 Intel Xeon X5660', '74GB', '120GB SSD');
+    // const server1 = new Computer('x1 Intel Xeon E5-2690', '32GB', '512GB SSD');
+    // const server2 = new Computer('x2 Intel Xeon E5-2690', '64GB', '250GB M.2');
+    // const server3 = new Computer('x2 Intel Xeon X5660', '74GB', '120GB SSD');
 
-    computers[server1.id] = server1;
-    computers[server2.id] = server2;
-    computers[server3.id] = server3;
+    // computers[server1.id] = server1;
+    // computers[server2.id] = server2;
+    // computers[server3.id] = server3;
 }
 
 function size() {
