@@ -1,0 +1,26 @@
+[
+    {
+    "id": "7049f2f8-c1fb-4090-bdc1-68aefb1e5464",
+    "cpu": "x1 Intel Xeon E5-2690",
+    "ram": "32GB",
+    "hdd": "512GB SSD"
+    },
+    {
+    "id": "02835e2f-91b9-43a4-b447-fc681a76ad77",
+    "cpu": "x2 Intel Xeon E5-2690",
+    "ram": "64GB",
+    "hdd": "250GB M.2"
+    },
+    {
+    "id": "aeee8e80-271c-4355-971a-43ba26b91df1",
+    "cpu": "x2 Intel Xeon X5660",
+    "ram": "74GB",
+    "hdd": "120GB SSD"
+    },
+    {
+    "id": "aeee8e80-271c-4355-971a-43ba26b91df2",
+    "cpu": "x1 AMD Ryzen 1800X",
+    "ram": "16GB",
+    "hdd": "1TB NVME"
+    }
+]
