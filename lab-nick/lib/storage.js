@@ -32,6 +32,7 @@ function size() {
     return servers.length;
 }
 
+//shuld pull urrent state of Computer, add the new information and save Computer to stor.json file.
 function create(cpu, ram, hdd) {
     console.log('create server hit!');
     const server = new Computer(cpu, ram, hdd);
