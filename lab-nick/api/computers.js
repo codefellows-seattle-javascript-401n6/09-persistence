@@ -8,7 +8,7 @@ function getServers(req, res) {
 
     let servers = storage.readAll();
     // console.log('I made it to this point at least before breaking!')
-    // for tests
+    // for testing
     servers[1].id = '02835e2f-91b9-43a4-b447-fc681a76ad77';
     let response = servers;
 
@@ -45,6 +45,7 @@ function getServers(req, res) {
 
 
 function createServer(req, res) {
+    console.log('create server api hit!');
     bodyParser(req, res)
         .then(body => {
             if (!body.cpu || !body.ram || !body.hdd) {
@@ -83,38 +84,6 @@ function deleteServer(req, res) {
         });
     }
 };
-
-// function getComputer (req, res) {
-//     res.writeHead(200, {
-//         'content-Type': 'text/plain'
-//     });
-//     res.write('Nothing here yet');
-//     res.end();
-// }
-
-// function createComputer (req, res) {
-//     res.writeHead(200, {
-//         'content-Type': 'text/plain'
-//     });
-//     res.write('Nothing here yet');
-//     res.end();
-// }
-
-// function updateComputer (req, res) {
-//     res.writeHead(200, {
-//         'content-Type': 'text/plain'
-//     });
-//     res.write('Nothing here yet');
-//     res.end();
-// }
-
-// function deleteComputer (req, res) {
-//     res.writeHead(200, {
-//         'content-Type': 'text/plain'
-//     });
-//     res.write('Nothing here yet');
-//     res.end();
-// }
 
 module.exports = { 
     getServers, 

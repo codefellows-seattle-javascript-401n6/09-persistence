@@ -42,7 +42,7 @@ class Router {
         let path = req.url.pathname;
         const route = this.routes[method][path];
         if (!route) {
-            throw `404 Not Found: ${method} ${req.url}`;
+            throw `router 404 Not Found: ${method} ${req.url}`;
         }
         route(req, res);
     }
