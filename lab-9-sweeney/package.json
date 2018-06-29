@@ -10,6 +10,10 @@
   "scripts": {
     "test": "jest"
   },
+  "dependencies": {
+    "superagent": "^3.8.2",
+    "uuid": "^3.2.1"
+  },
   "author": "Caitlin Sweeney",
   "license": "ISC"
 }
