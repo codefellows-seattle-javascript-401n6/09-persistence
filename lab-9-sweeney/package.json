@@ -1,0 +1,19 @@
+{
+  "name": "lab-9-sweeney",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "superagent": "^3.8.2",
+    "uuid": "^3.2.1"
+  },
+  "author": "Caitlin Sweeney",
+  "license": "ISC"
+}
